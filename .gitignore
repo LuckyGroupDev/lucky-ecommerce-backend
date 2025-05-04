@@ -398,3 +398,68 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# ========================
+# Lucky Ecommerce .NET 8 extra ignores
+# ========================
+
+# --- Lucky Ecommerce: Clean Arch .NET 8 extra ignores ---
+# Entity Framework Core Migrations (historiales y backups)
+**/Migrations/
+
+# SQLite DBs (si llegas a usar en test/local)
+*.db
+*.sqlite
+
+# Docker files & ignore docker-compose generated
+docker-compose.override.yml
+.env
+
+# IDE Rider (si alguien del equipo usa JetBrains Rider)
+.idea/
+
+# SonarQube / Análisis estático
+.sonar/
+
+# NDepend (análisis de dependencias .NET)
+.ndepend/
+
+# Secretos de usuario en .NET (dotnet user-secrets)
+secrets.json
+
+# Ignorar archivos y directorios generados por Docker
+
+# Docker images
+*.tar
+*.img
+
+# Docker containers
+docker-compose.override.yml
+
+# Docker volumes
+.docker/
+
+# Archivos temporales y específicos de Visual Studio ya están previamente listados
+# Node.js 
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files
+.env
+.env.*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
