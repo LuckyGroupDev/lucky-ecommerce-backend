@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\5.Transversal\Lucky.Ecommerce.Transversal.Common\Lucky.Ecommerce.Transversal.Common.csproj" />
+    <ProjectReference Include="..\Lucky.Ecommerce.Infrastructure.Data\Lucky.Ecommerce.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\Lucky.Ecommerce.Infrastructure.Interface\Lucky.Ecommerce.Infrastructure.Interface.csproj" />
+  </ItemGroup>
+
+</Project>
