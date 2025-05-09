@@ -1,0 +1,61 @@
+# Build stage: compila toda la solución
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+# Establecer directorio de trabajo para la solución
+WORKDIR /app
+
+# Definir carpeta de paquetes NuGet para evitar rutas de Windows
+ENV NUGET_PACKAGES=/root/.nuget/packages
+
+# Copiar configuración de NuGet que limpia carpetas de fallback no válidas
+COPY NuGet.Config ./
+
+# Copiar la solución y los archivos de proyecto necesarios
+COPY Lucky.Ecommerce.sln ./
+COPY 1.Dominio/Lucky.Ecommerce.Domain.Core/Lucky.Ecommerce.Domain.Core.csproj 1.Dominio/Lucky.Ecommerce.Domain.Core/
+COPY 1.Dominio/Lucky.Ecommerce.Domain.Entity/Lucky.Ecommerce.Domain.Entity.csproj 1.Dominio/Lucky.Ecommerce.Domain.Entity/
+COPY 1.Dominio/Lucky.Ecommerce.Domain.Interface/Lucky.Ecommerce.Domain.Interface.csproj 1.Dominio/Lucky.Ecommerce.Domain.Interface/
+
+COPY 2.Aplicacion/Lucky.Ecommerce.Application.Dto/Lucky.Ecommerce.Application.Dto.csproj 2.Aplicacion/Lucky.Ecommerce.Application.Dto/
+COPY 2.Aplicacion/Lucky.Ecommerce.Application.Interface/Lucky.Ecommerce.Application.Interface.csproj 2.Aplicacion/Lucky.Ecommerce.Application.Interface/
+COPY 2.Aplicacion/Lucky.Ecommerce.Application.Main/Lucky.Ecommerce.Application.Main.csproj 2.Aplicacion/Lucky.Ecommerce.Application.Main/
+
+COPY 3.Infraestructura/Lucky.Ecommerce.Infrastructure.Data/Lucky.Ecommerce.Infrastructure.Data.csproj 3.Infraestructura/Lucky.Ecommerce.Infrastructure.Data/
+COPY 3.Infraestructura/Lucky.Ecommerce.Infrastructure.Interface/Lucky.Ecommerce.Infrastructure.Interface.csproj 3.Infraestructura/Lucky.Ecommerce.Infrastructure.Interface/
+COPY 3.Infraestructura/Lucky.Ecommerce.Infrastructure.Repository/Lucky.Ecommerce.Infrastructure.Repository.csproj 3.Infraestructura/Lucky.Ecommerce.Infrastructure.Repository/
+
+COPY 4.Servicio/Lucky.Ecommerce.Services.WebApi/Lucky.Ecommerce.Services.WebApi.csproj 4.Servicio/Lucky.Ecommerce.Services.WebApi/
+
+COPY 5.Transversal/Lucky.Ecommerce.Transversal.Common/Lucky.Ecommerce.Transversal.Common.csproj 5.Transversal/Lucky.Ecommerce.Transversal.Common/
+COPY 5.Transversal/Lucky.Ecommerce.Transversal.Mapper/Lucky.Ecommerce.Transversal.Mapper.csproj 5.Transversal/Lucky.Ecommerce.Transversal.Mapper/
+
+# Restaurar dependencias NuGet usando config y carpeta de paquetes local
+RUN dotnet restore --configfile NuGet.Config --packages /root/.nuget/packages
+
+# Copiar el resto del código fuente para publicación
+COPY . .
+
+# Publicar el proyecto WebApi usando ruta explícita
+RUN dotnet publish 4.Servicio/Lucky.Ecommerce.Services.WebApi/Lucky.Ecommerce.Services.WebApi.csproj \
+    -c Release -o /app/publish --no-restore
+
+# Etapa de ejecución: imagen ligera solo con runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+
+# Crear un grupo y un usuario no root para mayor seguridad
+RUN addgroup --system appgroup && adduser --system appuser --ingroup appgroup
+USER appuser
+
+# Copiar los artefactos publicados desde la etapa de build
+COPY --from=build /app/publish .
+
+# Exponer el puerto 80
+EXPOSE 80
+
+# Healthcheck para monitorear la salud del contenedor
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
+  CMD curl --fail http://localhost/health || exit 1
+
+# Entrypoint: ejecutar la aplicación
+ENTRYPOINT ["dotnet", "Lucky.Ecommerce.Services.WebApi.dll"]

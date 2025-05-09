@@ -1,0 +1,6 @@
+﻿services: 
+  lucky.ecommerce.services.webapi:
+    image: ${DOCKER_REGISTRY-}luckyecommerceserviceswebapi
+    build:
+      context: .
+      dockerfile: 4.Servicio/Lucky.Ecommerce.Services.WebApi/Dockerfile

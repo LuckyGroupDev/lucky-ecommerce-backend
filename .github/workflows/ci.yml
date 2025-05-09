@@ -1,0 +1,33 @@
+name: .NET Build and Test
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.x' # Especifica la versión de .NET que estás usando
+
+    - name: Restore dependencies
+      run: dotnet restore Lucky.Ecommerce.sln
+
+    - name: Build
+      run: dotnet build Lucky.Ecommerce.sln --configuration Release --no-restore
+
+    - name: Run tests
+      run: dotnet test Lucky.Ecommerce.sln --configuration Release --no-build
