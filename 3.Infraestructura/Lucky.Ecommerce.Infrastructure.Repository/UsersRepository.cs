@@ -15,18 +15,20 @@ namespace Lucky.Ecommerce.Infrastructure.Repository
         }
         public Users Authenticate(string userName, string password)
         {
-            using (var connection = _connectionFactory.GetConnection)
-            {
-                var query = "UsersGetByUserAndPassword";
-                var parameters = new DynamicParameters();
-                parameters.Add("UserName", userName);
-                parameters.Add("Password", password);
+            using var connection = _connectionFactory.GetConnection;
 
-                var user = connection.QuerySingle<Users>(query, param: parameters, commandType: CommandType.StoredProcedure);
-                return user;
-            }
+            // Forma correcta de llamar funciones en PostgreSQL
+            var sql = "SELECT * FROM public.usersgetbyuserandpassword(@p_username, @p_password)";
+
+            var user = connection.QueryFirstOrDefault<Users>(sql, new
+            {
+                p_username = userName,
+                p_password = password
+            });
+
+            return user;
         }
- 
+
     }
 
 }
