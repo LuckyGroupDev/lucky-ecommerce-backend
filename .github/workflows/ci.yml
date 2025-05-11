@@ -3,7 +3,7 @@ name: Deploy to Render
 on:
   push:
     branches:
-      - main
+      # - main
       - feature/postgresql-integration  # Aquí puedes poner las ramas que quieras que disparen el deploy
   workflow_dispatch:  # Para poder lanzarlo manualmente desde GitHub Actions UI 
 
@@ -24,10 +24,10 @@ jobs:
         run: dotnet restore
 
       - name: Build the app
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build Lucky.Ecommerce.sln --configuration Release --no-restore
 
       - name: Test the app
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test Lucky.Ecommerce.sln --no-build --verbosity normal
 
       - name: Deploy to Render using API REST
         env:
