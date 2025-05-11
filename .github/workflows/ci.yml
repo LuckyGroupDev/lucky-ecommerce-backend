@@ -29,8 +29,12 @@ jobs:
       - name: Test the app
         run: dotnet test --no-build --verbosity normal
 
-      - name: Deploy to Render
-        uses: renderinc/render-deploy@v1
-        with:
-          render-api-key: ${{ secrets.RENDER_API_KEY }}
-          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+      - name: Deploy to Render using API REST
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+        run: |
+          curl -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
+          -H "Authorization: Bearer $RENDER_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{}'
