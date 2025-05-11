@@ -158,7 +158,8 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction()) /*Para que se habilite el swagger en Production tambien*/
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
