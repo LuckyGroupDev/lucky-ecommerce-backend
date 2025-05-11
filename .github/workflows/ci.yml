@@ -21,7 +21,7 @@ jobs:
           dotnet-version: 8.0.x  # Usa la misma versión que tienes en tu Dockerfile
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore Lucky.Ecommerce.sln
 
       - name: Build the app
         run: dotnet build Lucky.Ecommerce.sln --configuration Release --no-restore
