@@ -30,7 +30,7 @@ jobs:
         run: dotnet test --no-build --verbosity normal
 
       - name: Deploy to Render
-        uses: render-examples/deploy-to-render-action@v1
+        uses: renderinc/render-deploy@v1
         with:
           render-api-key: ${{ secrets.RENDER_API_KEY }}
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
