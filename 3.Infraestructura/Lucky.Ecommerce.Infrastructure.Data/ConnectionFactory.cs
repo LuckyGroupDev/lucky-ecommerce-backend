@@ -11,7 +11,7 @@ namespace Lucky.Ecommerce.Infrastructure.Data
         private readonly string _connectionString;
         public ConnectionFactory(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("NortwindConnection");
+            _connectionString = configuration.GetConnectionString("LuckyEcommerceConnection");
         }
 
         public IDbConnection GetConnection

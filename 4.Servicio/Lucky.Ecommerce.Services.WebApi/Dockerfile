@@ -2,7 +2,7 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
+#USER $APP_UID   #Eliminado para que Render, Porque en Render eso puede causar errores (Render usa su propio usuario dentro del contenedor).  
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
